@@ -28,6 +28,12 @@ function App() {
   const [todo, setTodo] = useState<Todo>();
   const [todoId, setTodoId] = useState<number>(0);
   const [targetId, setTargetId] = useState<number>(0);
+  const [targetTitle, setTargetTitle] = useState('');
+  const [targetDescription, setTargetDescription] = useState('');
+  const [todoTitle, setTodoTitle] = useState('');
+  const [todoDescription, setTodoDescription] = useState('');
+  const [targetIdForTodo, setTargetIdForTodo] = useState('');
+
 
   const requestBase = axios.create({
     baseURL: baseUrl,
@@ -49,21 +55,20 @@ function App() {
         } 
       };
       
+
     const postTarget = async () => {
       try {
         const response = await requestBase.post('targets', {
-        title: 'Demo da aula',
-        description: 'Mostando como fazer um post com axios',
-        isComplete: false,
-        todo:[]
-          
-        });  
-        console.log(response.data);   
-
+          title: targetTitle,
+          description: targetDescription,
+          isComplete: false,
+          todo: [],
+        });
+        console.log(response.data);
       } catch (error) {
-        console.error('Erro na requisição:', error)
-      };   
-    }
+        console.error('Erro na requisição:', error);
+      }
+    };
 
     const putTarget = async () => {
       try {
@@ -126,22 +131,19 @@ function App() {
         }
       }
 
-    const postTodo = async () => {
-      try {
-        const response = await requestBase.post('Todo', {
-        title: 'Primeiro',
-        description: 'Montar a estrutura do request - URL e Headers',
-        isComplete: false,
-        targetId: 22
-        });
-        console.log(response.data);
-      
-      } catch (error) {
-        console.error('Erro na requisição:', error)
-      
+      const postTodo = async () => {
+        try {
+          const response = await requestBase.post('Todo', {
+            title: todoTitle,
+            description: todoDescription,
+            isComplete: false,
+            targetId: parseInt(targetIdForTodo), 
+          });
+          console.log(response.data);
+        } catch (error) {
+          console.error('Erro na requisição:', error);
+        }
       };
-      
-    };
       
     const putTodo = async () => {   
       try {
@@ -174,11 +176,66 @@ function App() {
 
 
 
-  return (
-    <>
-
-    </>
-  )
-}
+    return (
+      <>
+      <div className="App">
+        <h2>Criar Target</h2>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            postTarget();
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Título do Target"
+            value={targetTitle}
+            onChange={(e) => setTargetTitle(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Descrição do Target"
+            value={targetDescription}
+            onChange={(e) => setTargetDescription(e.target.value)}
+            required
+          />
+          <button type="submit">Criar Target</button>
+        </form>
+  
+        <h2>Criar TODO</h2>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            postTodo();
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Título do TODO"
+            value={todoTitle}
+            onChange={(e) => setTodoTitle(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Descrição do TODO"
+            value={todoDescription}
+            onChange={(e) => setTodoDescription(e.target.value)}
+            required
+          />
+          <input
+            type="number"
+            placeholder="ID do Target"
+            value={targetIdForTodo}
+            onChange={(e) => setTargetIdForTodo(e.target.value)}
+            required
+          />
+          <button type="submit">Criar TODO</button>
+        </form>
+      </div>
+      </>
+    );
+  }
 
 export default App
