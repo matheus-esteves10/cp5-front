@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import axios from 'axios'
+import React, { useState } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import './App.css';
+import axios from 'axios';
 
 function App() {
-  const [count, setCount] = useState(0)
-   
+  const [count, setCount] = useState(0);
+
   // Interfaces
   interface Todo {
     id: number;
@@ -15,17 +15,17 @@ function App() {
     isComplete: boolean;
     targetId: number;
   }
-    
+
   interface Target {
     id: number;
-    title: string; 
+    title: string;
     description: string;
     isComplete: boolean;
   }
 
   const baseUrl = 'https://todo-caio.azurewebsites.net/api/';
-  const [target, setTargets] = useState<Target | null>(null);
-  const [todo, setTodo] = useState<Todo | null>(null);
+  const [targets, setTargets] = useState<Target[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [todoId, setTodoId] = useState<number>(0);
   const [targetId, setTargetId] = useState<number>(0);
   const [targetTitle, setTargetTitle] = useState('');
@@ -37,14 +37,14 @@ function App() {
   const requestBase = axios.create({
     baseURL: baseUrl,
     headers: {
-      'Content-Type': 'application/json', 
-    },  
+      'Content-Type': 'application/json',
+    },
   });
 
   // Requisições para Target
   const getTarget = async () => {
     try {
-      const response = await requestBase.get('Targets');   
+      const response = await requestBase.get('Targets');
       setTargets(response.data);
     } catch (error) {
       console.error('Erro na requisição:', error);
@@ -81,8 +81,9 @@ function App() {
 
   const deleteTarget = async () => {
     try {
-      const response = await requestBase.delete(`targets/${targetId}`);
-      setTargets(response.data);
+      await requestBase.delete(`targets/${targetId}`);
+      // Após exclusão, recarregar a lista de targets
+      getTarget();
     } catch (error) {
       console.error('Erro na requisição:', error);
     }
@@ -101,7 +102,7 @@ function App() {
   const getTodo = async () => {
     try {
       const response = await requestBase.get('Todo');
-      setTodo(response.data);
+      setTodos(response.data);
     } catch (error) {
       console.error('Erro na requisição:', error);
     }
@@ -110,7 +111,7 @@ function App() {
   const getTodoById = async () => {
     try {
       const response = await requestBase.get(`todo/${todoId}`);
-      setTodo(response.data);
+      setTodos(response.data);
     } catch (error) {
       console.error('Erro na requisição:', error);
     }
@@ -147,8 +148,9 @@ function App() {
 
   const deleteTodo = async () => {
     try {
-      const response = await requestBase.delete(`todo/${todoId}`);
-      setTodo(response.data);
+      await requestBase.delete(`todo/${todoId}`);
+      // Após exclusão, recarregar a lista de todos
+      getTodo();
     } catch (error) {
       console.error('Erro na requisição:', error);
     }
@@ -157,7 +159,7 @@ function App() {
   return (
     <>
       <div className="App">
-        <div className='post'>
+        <div className="post">
           <h2>Criar Target</h2>
           <form
             onSubmit={(e) => {
@@ -181,7 +183,7 @@ function App() {
             />
             <button type="submit">Criar Target</button>
           </form>
-    
+
           <h2>Criar TODO</h2>
           <form
             onSubmit={(e) => {
@@ -282,6 +284,42 @@ function App() {
               required
             />
             <button type="submit">Alterar TODO</button>
+          </form>
+        </div>
+
+        <div className="forms-excluir">
+          <h2>Excluir Target</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              deleteTarget();
+            }}
+          >
+            <input
+              type="number"
+              placeholder="ID do Target"
+              value={targetId}
+              onChange={(e) => setTargetId(parseInt(e.target.value))}
+              required
+            />
+            <button type="submit">Excluir Target</button>
+          </form>
+
+          <h2>Excluir TODO</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              deleteTodo();
+            }}
+          >
+            <input
+              type="number"
+              placeholder="ID do TODO"
+              value={todoId}
+              onChange={(e) => setTodoId(parseInt(e.target.value))}
+              required
+            />
+            <button type="submit">Excluir TODO</button>
           </form>
         </div>
       </div>
