@@ -179,60 +179,66 @@ function App() {
     return (
       <>
       <div className="App">
-        <h2>Criar Target</h2>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            postTarget();
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Título do Target"
-            value={targetTitle}
-            onChange={(e) => setTargetTitle(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Descrição do Target"
-            value={targetDescription}
-            onChange={(e) => setTargetDescription(e.target.value)}
-            required
-          />
-          <button type="submit">Criar Target</button>
-        </form>
-  
-        <h2>Criar TODO</h2>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            postTodo();
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Título do TODO"
-            value={todoTitle}
-            onChange={(e) => setTodoTitle(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Descrição do TODO"
-            value={todoDescription}
-            onChange={(e) => setTodoDescription(e.target.value)}
-            required
-          />
-          <input
-            type="number"
-            placeholder="ID do Target"
-            value={targetIdForTodo}
-            onChange={(e) => setTargetIdForTodo(e.target.value)}
-            required
-          />
-          <button type="submit">Criar TODO</button>
-        </form>
+        <div className='post'>
+          <h2>Criar Target</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              postTarget();
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Título do Target"
+              value={targetTitle}
+              onChange={(e) => setTargetTitle(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Descrição do Target"
+              value={targetDescription}
+              onChange={(e) => setTargetDescription(e.target.value)}
+              required
+            />
+            <button type="submit">Criar Target</button>
+          </form>
+    
+          <h2>Criar TODO</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              postTodo();
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Título do TODO"
+              value={todoTitle}
+              onChange={(e) => setTodoTitle(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Descrição do TODO"
+              value={todoDescription}
+              onChange={(e) => setTodoDescription(e.target.value)}
+              required
+            />
+            <input
+              type="number"
+              placeholder="ID do Target"
+              value={targetIdForTodo}
+              onChange={(e) => setTargetIdForTodo(e.target.value)}
+              required
+            />
+            <button type="submit">Criar TODO</button>
+          </form>
+        </div>
+        <div className="put">
+          
+        </div>
+        
       </div>
       </>
     );
