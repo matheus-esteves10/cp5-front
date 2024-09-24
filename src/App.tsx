@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
@@ -26,10 +26,12 @@ function App() {
   const baseUrl = 'https://todo-caio.azurewebsites.net/api/';
   const [targets, setTargets] = useState<Target[]>([]);
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [todoId, setTodoId] = useState<number>(0);
+  const [selectedTargetId, setSelectedTargetId] = useState<number | null>(null);
+
   const [targetId, setTargetId] = useState<number>(0);
   const [targetTitle, setTargetTitle] = useState('');
   const [targetDescription, setTargetDescription] = useState('');
+  const [todoId, setTodoId] = useState<number>(0);
   const [todoTitle, setTodoTitle] = useState('');
   const [todoDescription, setTodoDescription] = useState('');
   const [targetIdForTodo, setTargetIdForTodo] = useState('');
@@ -156,9 +158,64 @@ function App() {
     }
   };
 
+  // Nova função para buscar todos os TODOS de um target específico
+  const getTodosByTargetId = async (targetId: number) => {
+    try {
+      const response = await requestBase.get(`Todo/target/${targetId}`);
+      setTodos(response.data);
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Carregar targets na inicialização
+    getTarget();
+  }, []);
+
+  const handleTargetClick = (targetId: number) => {
+    setSelectedTargetId(targetId);
+    getTodosByTargetId(targetId);
+  };
+
   return (
     <>
       <div className="App">
+        <h1>Lista de Targets</h1>
+        <div className="target-list">
+          {targets.length === 0 ? (
+            <p>Carregando targets...</p>
+          ) : (
+            <ul>
+              {targets.map((target) => (
+                <li key={target.id} onClick={() => handleTargetClick(target.id)}>
+                  <h3>{target.title}</h3>
+                  <p>{target.description}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <h2>Lista de TODOS para o Target Selecionado</h2>
+        <div className="todo-list">
+          {selectedTargetId === null ? (
+            <p>Selecione um target para ver seus TODOS</p>
+          ) : todos.length === 0 ? (
+            <p>Sem TODOS para este target</p>
+          ) : (
+            <ul>
+              {todos.map((todo) => (
+                <li key={todo.id}>
+                  <h4>{todo.title}</h4>
+                  <p>{todo.description}</p>
+                  <p>Status: {todo.isComplete ? 'Completo' : 'Incompleto'}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <div className="post">
           <h2>Criar Target</h2>
           <form
@@ -278,7 +335,7 @@ function App() {
             />
             <input
               type="number"
-              placeholder="ID do Target do TODO"
+              placeholder="ID do Target para este TODO"
               value={targetIdForTodo}
               onChange={(e) => setTargetIdForTodo(e.target.value)}
               required
@@ -287,7 +344,7 @@ function App() {
           </form>
         </div>
 
-        <div className="forms-excluir">
+        <div className="delete">
           <h2>Excluir Target</h2>
           <form
             onSubmit={(e) => {
