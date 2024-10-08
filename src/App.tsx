@@ -165,39 +165,42 @@ function App() {
           <h1>TODO APP</h1>
         </header>
       <div className="all-content">
-      <h1>Lista de Targets</h1>
-      <div className="target-list">
-        {targets.length === 0 ? (
-          <p>Carregando targets...</p>
-        ) : (
-          <ul>
-            {targets.map((target) => (
-              <li key={target.id} onClick={() => handleTargetClick(target.id)}>
-                <h3>{target.title}</h3>
-                <p>{target.description}</p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <div className="gets">
+        <div className="target-list">
+          <h1>Lista de Targets</h1>
+          {targets.length === 0 ? (
+            <p>Carregando targets...</p>
+          ) : (
+            <ul>
+              {targets.map((target) => (
+                <li key={target.id} onClick={() => handleTargetClick(target.id)}>
+                  <h3>{target.title}</h3>
+                  <p>{target.description}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-      <h2>Lista de TODOS para o Target Selecionado</h2>
-      <div className="todo-list">
-        {selectedTargetId === null ? (
-          <p>Selecione um target para ver seus TODOS</p>
-        ) : todos.length === 0 ? (
-          <p>Sem TODOS para este target</p>
-        ) : (
-          <ul>
-            {todos.map((todo) => (
-              <li key={todo.id}>
-                <h4>{todo.title}</h4>
-                <p>{todo.description}</p>
-                <p>Status: {todo.isComplete ? 'Completo' : 'Incompleto'}</p>
-              </li>
-            ))}
-          </ul>
-        )}
+        
+        <div className="todo-list">
+          <h2>Lista de TODOS para o Target Selecionado</h2>
+          {selectedTargetId === null ? (
+            <p>Selecione um target para ver seus TODOS</p>
+          ) : todos.length === 0 ? (
+            <p>Sem TODOS para este target</p>
+          ) : (
+            <ul>
+              {todos.map((todo) => (
+                <li key={todo.id}>
+                  <h4>{todo.title}</h4>
+                  <p>{todo.description}</p>
+                  <p>Status: {todo.isComplete ? 'Completo' : 'Incompleto'}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className="post">
